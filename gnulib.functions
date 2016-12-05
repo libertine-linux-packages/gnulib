@@ -1,0 +1,36 @@
+# This file is part of libertine linux's package gnulib. It is subject to the license terms in the COPYRIGHT file found in the top-level directory of this distribution and at https://raw.githubusercontent.com/libertine-linux-packages/gnulib/master/COPYRIGHT. No part of libertine linux's package gnulib, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYRIGHT file.
+# Copyright © 2016 The developers of libertine linux's package gnulib. See the COPYRIGHT file in the top-level directory of this distribution and at https://raw.githubusercontent.com/libertine-linux-packages/gnulib/master/COPYRIGHT.
+
+
+variant=upstream
+
+depends build_automake
+
+depends build_busybox
+
+build_needs cp sed
+libertine_compile_build_gnulib()
+{
+	local outputFolderPath="$(libertine_public_outputMiscPath)"
+	libertine_public_copy "$(libertine_public_sourcePath)"/. "$outputFolderPath"
+	
+	local buildAuxFolderPath="$outputFolderPath"/build-aux
+	
+	libertine_public_autoconf_replaceWithKnownVersionOfCompile "$buildAuxFolderPath"
+	libertine_public_autoconf_replaceWithKnownVersionOfConfigSub "$buildAuxFolderPath"
+	libertine_public_autoconf_replaceWithKnownVersionOfConfigGuess "$buildAuxFolderPath"
+	libertine_public_autoconf_replaceWithKnownVersionOfConfigRpath "$buildAuxFolderPath"
+	libertine_public_autoconf_replaceWithKnownVersionOfConfigLibpath "$buildAuxFolderPath"
+	libertine_public_autoconf_replaceWithKnownVersionOfArLib "$buildAuxFolderPath"
+	libertine_public_autoconf_replaceWithKnownVersionOfCompile "$buildAuxFolderPath"
+	libertine_public_autoconf_replaceWithKnownVersionOfDepcomp "$buildAuxFolderPath"
+	libertine_public_autoconf_replaceWithKnownVersionOfInstallSh "$buildAuxFolderPath"
+	libertine_public_autoconf_replaceWithKnownVersionOfMdateSh "$buildAuxFolderPath"
+	libertine_public_autoconf_replaceWithKnownVersionOfMkinstalldirs "$buildAuxFolderPath"
+	libertine_public_autoconf_replaceWithKnownVersionOfTexinfoTex "$buildAuxFolderPath"
+	
+	# Stop bootstrap requiring autopoint binary
+	sed -i \
+		-e 's;^with_gettext=yes$;with_gettext=no;g' \
+		"$buildAuxFolderPath"/bootstrap
+}
